@@ -1,0 +1,13 @@
+    <!-- membuat var dengan ejs -->
+    <% const user = 'jojo' %> 
+    <!-- menampilkan isi var dengan ejs -->
+    <p>welcome to mysite <%= user %> </p>
+    <p>mempunyai hobby : <%= hobby %> </p>
+
+    <h3>Daftar murid</h3>
+    <% murid.forEach(mrd => { %>
+     <ul>
+         <li>nama : <%= mrd.nama %> </li>
+         <li>kelas : <%= mrd.kelas %> </li>
+     </ul>
+    <% }) %>
