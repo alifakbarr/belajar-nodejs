@@ -1,0 +1,30 @@
+<a href="/contact/create" class="btn btn-sm btn-primary mt-3">Add</a>
+
+
+<% if (contacts.length === 0) { %>
+  <div class="alert alert-danger" role="alert">
+    contact masih kosong. 
+  </div>
+<% } %>
+
+
+<div class="container mt-4">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nama</th>
+            <th scope="col">Opsi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% contacts.forEach((contact,i) => { i++ %>
+            <tr>
+              <th scope="row"><%= i %> </th>
+              <td><%= contact.nama %> </td>
+              <td><a href="/contact/<%= contact.nama %> " class="btn btn-success rounded-pill">Detail</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+    </table>
+</div>

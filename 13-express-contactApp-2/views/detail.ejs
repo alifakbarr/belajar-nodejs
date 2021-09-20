@@ -1,0 +1,15 @@
+<% if (!contact) { %>
+    <div class="alert alert-danger" role="alert">
+        contact tidak ada <a href="/contact" class="alert-link">kembali</a>.
+      </div>
+<% }else{ %>
+
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title"><%= contact.nama %> </h5>
+      <p class="card-text"><%= contact.nohp %> </p>
+      <a href="/contact" class="card-link">kembali</a>
+    </div>
+  </div>
+<% } %> 
