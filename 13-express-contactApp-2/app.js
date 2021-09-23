@@ -1,11 +1,14 @@
 const express = require('express')
-const app = express()
-
-const {loadFile,findContact, addContact} = require('./utils/contacts')
-
-
 // menggunakan express-ejs-layouts
 const expressLayouts = require('express-ejs-layouts')
+const {loadFile,findContact, addContact, cekDuplikat} = require('./utils/contacts')
+const session = require('express-session')
+const cookieParser = require('cookie-parser')
+const flash =require('connect-flash')
+
+
+const { body, validationResult, check} = require('express-validator')
+const app = express()
 const port = 3000
 
 // gunakan ejs
@@ -19,7 +22,19 @@ app.use(expressLayouts)
 // built-in middleware
 // mengakses file static seperti foto,video,css
 app.use(express.static('public'))
-app.use(express.urlencoded()) //untuk menangkap data
+app.use(express.urlencoded({extended:true})) //untuk menangkap data
+
+// konfigurasi flash
+app.use(cookieParser('secret'))
+app.use(
+    session({
+        cookie:{maxAge:6000},
+        secret:'secret',
+        resave:true,
+        saveUninitialized:true,
+    })
+)
+app.use(flash())
 
 const murid = [
     {
@@ -61,7 +76,8 @@ app.get('/contact', (req,res) => {
         title: 'contact',
         layout: 'layouts/main-layout',
         // mengirimkan data
-        contacts
+        contacts,
+        msg:req.flash('msg') //dapat dari app.post(create)
     })
 })
 
@@ -69,16 +85,36 @@ app.get('/contact', (req,res) => {
 app.get('/contact/create', (req,res) => {
 
     res.render('create', {
-        title: 'contact',
+        title: 'create',
         layout: 'layouts/main-layout',
     })
 })
 
 // proses input data
-app.post('/contact', (req,res) =>{
-    addContact(req.body)
-    res.redirect('/contact') //ketika berhasil redirect ke get /contact
-    // res.send(req.body);
+app.post('/contact', 
+[
+    body('nama').custom((value) => {
+        const duplikat = cekDuplikat(value)
+        if(duplikat){
+            throw new Error('Nama sudah ada')
+        }
+        return true
+    }),
+    check('nohp', 'No Hp Tidak Valid').isMobilePhone('id-ID'),
+], (req,res) =>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+    //   return res.status(400).json({ errors: errors.array() }); 
+        res.render('create',{
+            layout: 'layouts/main-layout',
+            errors : errors.array()
+    })
+    
+    }else{
+        addContact(req.body)
+        req.flash('msg','Data berhasil ditambahkan') //mengirim pesan
+        res.redirect('/contact') //ketika berhasil redirect ke get /contact
+    }
 })
 
 app.get('/contact/:nama', (req,res) => {

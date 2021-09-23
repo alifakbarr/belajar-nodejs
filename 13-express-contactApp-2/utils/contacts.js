@@ -43,4 +43,11 @@ const addContact = (contact) => {
     saveContact(contacts) //simpan / timpa data
 }
 
-module.exports = {loadFile, findContact, addContact}
+// cek duplikat nama
+
+const cekDuplikat = (nama) => {
+    contacts = loadFile()
+    return contacts.find((contact) => contact.nama === nama)
+}
+
+module.exports = {loadFile, findContact, addContact, cekDuplikat}
