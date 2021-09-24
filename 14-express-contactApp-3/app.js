@@ -1,7 +1,7 @@
 const express = require('express')
 // menggunakan express-ejs-layouts
 const expressLayouts = require('express-ejs-layouts')
-const {loadFile,findContact, addContact, cekDuplikat, deleteContact} = require('./utils/contacts')
+const {loadFile,findContact, addContact, cekDuplikat, deleteContact, updateContacts} = require('./utils/contacts')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const flash =require('connect-flash')
@@ -117,6 +117,44 @@ app.post('/contact',
     }
 })
 
+// edit contact
+app.get('/contact/edit/:nama', (req,res) => {
+    const contact = findContact(req.params.nama)
+    res.render('edit',{
+        layout: 'layouts/main-layout',
+        contact
+    })
+})
+
+// proses update
+app.post('/contact/update', 
+[
+    body('nama').custom((value, {req}) => {
+        const duplikat = cekDuplikat(value)
+        if(value !== req.body.oldName && duplikat){ 
+            throw new Error('Nama sudah ada')
+        }
+        return true
+    }),
+    check('nohp', 'No Hp Tidak Valid').isMobilePhone('id-ID'),
+], (req,res) =>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+    //   return res.status(400).json({ errors: errors.array() }); 
+        res.render('edit',{
+            layout: 'layouts/main-layout',
+            errors : errors.array(),
+            contact : req.body
+    })
+    
+    }else{
+        updateContacts(req.body)
+        req.flash('msg','Data berhasil diubah') //mengirim pesan
+        res.redirect('/contact') //ketika berhasil redirect ke get /contact
+    }
+})
+
+// delete contact
 app.get('/contact/delete/:nama', (req,res) => {
     const contact = findContact(req.params.nama) // cari nama
     if(!contact){

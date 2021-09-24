@@ -9,7 +9,8 @@
     <div class="card-body">
       <h5 class="card-title"><%= contact.nama %> </h5>
       <p class="card-text"><%= contact.nohp %> </p>
-      <a href="/contact/delete/<%= contact.nama %>" class="btn btn-danger badge" onclick="return confirm('yakin hapus data?')">Hapus</a>
+      <a href="/contact/edit/<%= contact.nama %>" class="btn btn-warning badge" onclick="return confirm('yakin edit')">Edit</a>
+      <a href="/contact/delete/<%= contact.nama %>" class="btn btn-danger badge" onclick="return confirm('yakin hapus')">Hapus</a>
       <a href="/contact" class="card-link d-block">kembali</a>
     </div>
   </div>
