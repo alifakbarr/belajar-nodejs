@@ -1,0 +1,21 @@
+<% if (!contact) { %>
+    <div class="alert alert-danger" role="alert">
+        contact tidak ada <a href="/contact" class="alert-link">kembali</a>.
+      </div>
+<% }else{ %>
+
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title"><%= contact.nama %> </h5>
+      <p class="card-text"><%= contact.nohp %> </p>
+      <a href="/contact/edit/<%= contact.nama %>" class="btn btn-warning badge" onclick="return confirm('yakin edit')">Edit</a>
+      <!-- <a href="/contact/delete/<%= contact.nama %>" class="btn btn-danger badge" onclick="return confirm('yakin hapus')">Hapus</a> -->
+      <form action="/contact?_method=DELETE" method="post">
+        <input type="hidden" name="_id" value="<%= contact._id %>">
+        <button type="submit" class="btn btn-danger badge" onclick="return confirm('yakin hapus?')">Delete</button>
+      </form>
+      <a href="/contact" class="card-link d-block">kembali</a>
+    </div>
+  </div>
+<% } %> 
