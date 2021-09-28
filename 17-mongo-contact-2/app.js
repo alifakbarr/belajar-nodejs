@@ -119,8 +119,8 @@ app.post('/contact',
 // })
 
 // edit contact
-app.get('/contact/edit/:nama', async (req,res) => {
-    const contact = await Contact.findOne( {nama : req.params.nama} )
+app.get('/contact/edit/:id', async (req,res) => {
+    const contact = await Contact.findOne( {_id : req.params.id} )
     res.render('edit',{
         layout: 'layouts/main-layout',
         contact
@@ -175,8 +175,8 @@ app.delete('/contact', (req,res) => {
 
 
 // halaman detail contact
-app.get('/contact/:nama', async(req,res) => {
-    const contact = await Contact.findOne({nama: req.params.nama})
+app.get('/contact/:id', async(req,res) => {
+    const contact = await Contact.findOne({_id: req.params.id})
     res.render('detail',{
         layout: 'layouts/main-layout',
         contact
